@@ -1,0 +1,7 @@
+MANIFEST
+Makefile.PL
+Changes
+lib/Eval/WithLexicals.pm
+bin/tinyrepl
+t/simple.t
+META.yml                                 Module meta-data (added by MakeMaker)
