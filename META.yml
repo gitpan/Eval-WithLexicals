@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Eval-WithLexicals
-version:            1.000000
+version:            1.001000
 abstract:           pure perl eval with persistent lexical variables
 author:
     - Matt S Trout <mst@shadowcat.co.uk>

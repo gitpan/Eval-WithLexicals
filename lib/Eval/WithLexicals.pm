@@ -3,7 +3,7 @@ package Eval::WithLexicals;
 use Moo;
 use Sub::Quote;
 
-our $VERSION = '1.000000'; # 1.0.0
+our $VERSION = '1.001000'; # 1.1.0
 $VERSION = eval $VERSION;
 
 has lexicals => (is => 'rw', default => quote_sub q{ {} });
@@ -36,6 +36,7 @@ sub eval {
 ${setup}
 sub Eval::WithLexicals::Cage::current_line {
 package ${package};
+#line 1 "(eval)"
 ${to_eval}
 ;sub Eval::WithLexicals::Cage::pad_capture { }
 BEGIN { Eval::WithLexicals::Util::capture_list() }
@@ -92,7 +93,7 @@ sub _eval_do {
 
   sub capture_list {
     my $pad_capture = \&Eval::WithLexicals::Cage::pad_capture;
-    my @names = map $_->PV, grep $_->isa('B::PV'),
+    my @names = grep $_ ne '&', map $_->PV, grep $_->isa('B::PV'),
       svref_2object($pad_capture)->OUTSIDE->PADLIST->ARRAYelt(0)->ARRAY;
     $Eval::WithLexicals::current_code .=
       '+{ '.join(', ', map "'$_' => \\$_", @names).' };'
@@ -184,7 +185,7 @@ Matt S. Trout <mst@shadowcat.co.uk>
 
 =head1 CONTRIBUTORS
 
-None required yet. Maybe this module is perfect (hahahahaha ...).
+David Leadbeater <dgl@dgl.cx>
 
 =head1 COPYRIGHT
 
