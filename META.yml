@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Eval-WithLexicals
-version:            1.001000
+version:            1.002000
 abstract:           pure perl eval with persistent lexical variables
 author:
     - Matt S Trout <mst@shadowcat.co.uk>
@@ -11,7 +11,7 @@ configure_requires:
 build_requires:
     ExtUtils::MakeMaker:  0
 requires:
-    Moo:  0.009
+    Moo:  0.009006
 no_index:
     directory:
         - t
