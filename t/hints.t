@@ -1,10 +1,10 @@
-use strictures 1;
-# Find the hint value that 'use strictures 1' sets on this perl.
-my $strictures_hints;
-BEGIN { $strictures_hints = $^H }
-
+use strictures ();
 use Test::More;
 use Eval::WithLexicals;
+use lib 't/lib';
+
+use strictures 1;
+use get_strictures_hints qw($strictures_hints $strictures_warn);
 
 my $eval = Eval::WithLexicals->with_plugins("HintPersistence")->new(prelude => '');
 
@@ -24,13 +24,20 @@ $eval->eval('use strictures 1');
 {
   local $SIG{__WARN__} = sub { };
 
-  ok !eval { $eval->eval('$x') }, 'Unable to use undeclared variable';
-  like $@, qr/requires explicit package/, 'Correct message in $@';
+  ok !eval { $eval->eval('${"x"}') }, 'Unable to use undeclared variable';
+  like $@, qr/Can't use string .* as a SCALAR ref/,
+  'Correct message in $@';
 }
 
-is_deeply(
-  $eval->hints->{q{$^H}}, \$strictures_hints,
+is(
+  ${$eval->hints->{q{$^H}}}, $strictures_hints,
  'Hints are set per strictures'
+);
+
+is(
+  (unpack "H*", ${$eval->hints->{q{${^WARNING_BITS}}}}),
+  (unpack "H*", $strictures_warn),
+  'Warning bits are set per strictures'
 );
 
 is_deeply(
@@ -39,13 +46,12 @@ is_deeply(
 );
 
 # Assumption about perl internals: sort pragma will set a key in %^H.
-
-$eval->eval(q{ { use sort 'stable' } }),
-ok !exists $eval->hints->{q{%^H}}->{sort},
+$eval->eval(q{ { use hint_hash_pragma 'param' } }),
+ok !exists $eval->hints->{q{%^H}}->{hint_hash_pragma},
   "Lexical pragma used below main scope not captured";
 
-$eval->eval(q{ use sort 'stable' }),
-ok exists $eval->hints->{q{%^H}}->{sort},
+$eval->eval(q{ use hint_hash_pragma 'param' }),
+is $eval->hints->{q{%^H}}->{hint_hash_pragma}, 'param',
   "Lexical pragma captured";
 
 done_testing;

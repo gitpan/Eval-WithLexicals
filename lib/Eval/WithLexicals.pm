@@ -4,7 +4,7 @@ use Moo;
 use Moo::Role ();
 use Sub::Quote;
 
-our $VERSION = '1.002000'; # 1.2.0
+our $VERSION = '1.003000'; # 1.3.0
 $VERSION = eval $VERSION;
 
 has lexicals => (is => 'rw', default => quote_sub q{ {} });
@@ -17,7 +17,7 @@ has lexicals => (is => 'rw', default => quote_sub q{ {} });
     isa => sub {
       my ($val) = @_;
       die "Invalid context type $val - should be list, scalar or void"
-	unless $valid_contexts{$val};
+        unless $valid_contexts{$val};
     },
   );
 }
@@ -136,6 +136,9 @@ sub _eval_do {
       ."\n}\n}\n1;\n";
   }
 }
+
+1;
+__END__
 
 =head1 NAME
 
@@ -259,6 +262,8 @@ Matt S. Trout <mst@shadowcat.co.uk>
 
 David Leadbeater <dgl@dgl.cx>
 
+haarg - Graham Knop (cpan:HAARG) <haarg@cpan.org>
+
 =head1 COPYRIGHT
 
 Copyright (c) 2010 the Eval::WithLexicals L</AUTHOR> and L</CONTRIBUTORS>
@@ -270,5 +275,3 @@ This library is free software and may be distributed under the same terms
 as perl itself.
 
 =cut
-
-1;

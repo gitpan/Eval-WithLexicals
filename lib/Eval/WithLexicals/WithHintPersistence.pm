@@ -2,11 +2,8 @@ package Eval::WithLexicals::WithHintPersistence;
 use Moo::Role;
 use Sub::Quote;
 
-our $VERSION = '1.002000'; # 1.2.0
+our $VERSION = '1.003000'; # 1.3.0
 $VERSION = eval $VERSION;
-
-# Used localised
-our($hints, %hints);
 
 has hints => (
   is => 'rw',
@@ -67,13 +64,24 @@ around capture_code => sub {
   my($self) = @_;
 
   ( q{ sub Eval::WithLexicals::Cage::capture_hints {
-          no warnings 'closure';
-          my($hints, %hints);
-          BEGIN { $hints = $^H; %hints = %^H; }
-          return q{$^H} => \$hints, q{%^H} => \%hints;
+          my ($hints, %hints, $warn_bits);
+          BEGIN {
+            no warnings 'closure';
+            $hints = $^H;
+            %hints = %^H;
+            $warn_bits = ${^WARNING_BITS};
+          }
+          return (
+            q{$^H}              => \$hints,
+            q{%^H}              => \%hints,
+            q{${^WARNING_BITS}} => \$warn_bits,
+          );
         } },
     $orig->(@_) )
 };
+
+1;
+__END__
 
 =head1 NAME
 
@@ -101,6 +109,16 @@ Saves and restores the C<$^H> and C<%^H> variables.
 Returns the internal hints hash, keys are C<$^H> and C<%^H> for the hint bits
 and hint hash respectively.
 
-=cut
+=head1 SUPPORT
 
-1;
+See L<Eval::WithLexicals> for support and contact information.
+
+=head1 AUTHORS
+
+See L<Eval::WithLexicals> for authors.
+
+=head1 COPYRIGHT AND LICENSE
+
+See L<Eval::WithLexicals> for the copyright and license.
+
+=cut
