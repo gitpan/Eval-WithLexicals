@@ -20,9 +20,10 @@ no_index:
     - xt
 requires:
   Moo: '0.009006'
+  perl: '5.008'
 resources:
   bugtracker: https://rt.cpan.org/Public/Dist/Display.html?Name=Eval-WithLexicals
   license: http://dev.perl.org/licenses/
   repository: git://git.shadowcat.co.uk/p5sagit/Eval-WithLexicals
-version: '1.003000'
+version: '1.003001'
 x_authority: cpan:MSTROUT

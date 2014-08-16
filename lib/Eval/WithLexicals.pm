@@ -4,7 +4,7 @@ use Moo;
 use Moo::Role ();
 use Sub::Quote;
 
-our $VERSION = '1.003000'; # 1.3.0
+our $VERSION = '1.003001'; # 1.3.1
 $VERSION = eval $VERSION;
 
 has lexicals => (is => 'rw', default => quote_sub q{ {} });
@@ -69,7 +69,8 @@ ${to_eval}
 ${capture_code}
 sub Eval::WithLexicals::Cage::grab_captures {
   no warnings 'closure'; no strict 'vars';
-  package Eval::WithLexicals::VarScope;!;
+  package! # hide from PAUSE
+    .q! Eval::WithLexicals::VarScope;!;
   # rest is appended by Eval::WithLexicals::Util::capture_list, called
   # during parsing by the BEGIN block from capture_code.
 
@@ -123,7 +124,8 @@ sub _eval_do {
 }
 
 {
-  package Eval::WithLexicals::Util;
+  package # hide from PAUSE
+    Eval::WithLexicals::Util;
 
   use B qw(svref_2object);
 

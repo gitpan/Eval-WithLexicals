@@ -28,7 +28,8 @@
       },
       "runtime" : {
          "requires" : {
-            "Moo" : "0.009006"
+            "Moo" : "0.009006",
+            "perl" : "5.008"
          }
       },
       "test" : {
@@ -53,6 +54,6 @@
          "web" : "http://git.shadowcat.co.uk/gitweb/gitweb.cgi?p=p5sagit/Eval-WithLexicals.git"
       }
    },
-   "version" : "1.003000",
+   "version" : "1.003001",
    "x_authority" : "cpan:MSTROUT"
 }
